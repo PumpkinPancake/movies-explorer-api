@@ -1,7 +1,10 @@
-const NOT_FOUND_ERROR = require("../errors/notFoundError");
-const ACCESS_DENIED_ERROR = require("../errors/accessDeniedError");
+const NOT_FOUND_ERROR = require('../errors/notFoundError');
+const ACCESS_DENIED_ERROR = require('../errors/accessDeniedError');
+const BAD_REQUEST_ERROR = require('../errors/badRequestError');
 
-const Movies = require("../models/movie");
+const { movieErrorMessage } = require('../utils/constants');
+
+const Movies = require('../models/movie');
 
 function getMovies(req, res, next) {
   const { _id } = req.user;
@@ -44,8 +47,8 @@ function createMovie(req, res, next) {
   })
     .then((movie) => res.send(movie))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        return next(new NOT_FOUND_ERROR("Неверные данные."));
+      if (err.name === 'ValidationError') {
+        return next(new BAD_REQUEST_ERROR(movieErrorMessage.badRequest));
       }
       return next(err);
     });
@@ -55,13 +58,13 @@ function deleteMovie(req, res, next) {
   const { movieId } = req.params;
 
   Movies.findById(movieId)
-    .orFail(new NOT_FOUND_ERROR("Фильм не найден."))
+    .orFail(new NOT_FOUND_ERROR(movieErrorMessage.notFound))
     .then((movie) => {
       if (movie.owner.equals(req.user._id)) {
-        return next(new ACCESS_DENIED_ERROR("Невозможно удалить фильм"));
+        return next(new ACCESS_DENIED_ERROR(movieErrorMessage.accessDenied));
       }
       return movie.deleteOne().then(() => {
-        res.status(200).send({ message: "Фильм успешно удалён." });
+        res.status(200).send(movieErrorMessage.send);
       });
     })
     .catch(next);

@@ -1,17 +1,26 @@
 const { JWT_SECRET } = process.env;
 
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-const UNAUTHORIZED_ERROR = require("../errors/unauthorizedError");
+const UNAUTHORIZED_ERROR = require('../errors/unauthorizedError');
+
+const { authErrorMessage } = require('../utils/constants');
+
+const isDev = process.env.NODE_ENV !== 'production';
 
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith("Bearer ")) {
-    throw new UNAUTHORIZED_ERROR("Invalid or expired token");
+  if (isDev) {
+    req.user = { devMode: true };
+    return next();
   }
 
-  const token = authorization.replace("Bearer ", "");
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw new UNAUTHORIZED_ERROR(authErrorMessage.Unauthorized);
+  }
+
+  const token = authorization.replace('Bearer ', '');
 
   try {
     const payload = jwt.verify(token, JWT_SECRET);
@@ -19,10 +28,10 @@ const auth = (req, res, next) => {
     next();
   } catch (err) {
     if (err instanceof jwt.JsonWebTokenError) {
-      return next(new UNAUTHORIZED_ERROR("Invalid token"));
+      return next(new UNAUTHORIZED_ERROR(authErrorMessage.Unauthorized));
     }
-    next(err);
   }
+  return next();
 };
 
 module.exports = auth;

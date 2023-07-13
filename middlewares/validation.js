@@ -1,6 +1,6 @@
-const { Joi, celebrate } = require("celebrate");
+const { Joi, celebrate } = require('celebrate');
 
-const { URL_REGEX, PASSWORD_REGEX, EMAIL_REGEX } = require("../regex");
+const { URL_REGEX, PASSWORD_REGEX, EMAIL_REGEX } = require('../regex');
 
 const loginValidator = celebrate({
   body: Joi.object().keys({
@@ -26,17 +26,17 @@ const createUserValidator = celebrate({
 
 const createMovieValidator = celebrate({
   body: Joi.object().keys({
-    thumbnail: Joi.string().required().pattern(URL_REGEX),
-    trailer: Joi.string().required().pattern(URL_REGEX),
-    image: Joi.string().required().pattern(URL_REGEX),
-    description: Joi.string().required(),
+    country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().pattern(URL_REGEX),
+    trailerLink: Joi.string().required().pattern(URL_REGEX),
+    thumbnail: Joi.string().required().pattern(URL_REGEX),
     movieId: Joi.number().required(),
-    country: Joi.string().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    year: Joi.string().required(),
   }),
 });
 
