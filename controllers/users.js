@@ -59,8 +59,7 @@ const createUser = (req, res, next) => {
         .catch((err) => {
           if (err.code === 11000) {
             return next(
-              new WRONG_CONFLICT_ENTITY(userErrorMessage.wrongConflict)
-            );
+              new WRONG_CONFLICT_ENTITY(userErrorMessage.wrongConflict));
           }
           if (err.name === 'ValidationError') {
             return next(new BAD_REQUEST_ERROR(userErrorMessage.badRequest));

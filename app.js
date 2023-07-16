@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const cors = require('cors');
+
 const express = require('express');
 
 const helmet = require('helmet');
@@ -20,15 +22,17 @@ const app = express();
 
 app.use(express.json());
 
+app.use(cors());
+
 app.use(helmet());
 
 app.use(requestLogger);
 
+app.use(limiter);
+
 app.use(router);
 
 app.use(errorLogger);
-
-app.use(limiter);
 
 app.use(errors());
 
