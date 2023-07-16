@@ -4,20 +4,11 @@ const jwt = require('jsonwebtoken');
 
 const UNAUTHORIZED_ERROR = require('../errors/unauthorizedError');
 
-const { authErrorMessage } = require('../utils/constants');
-
-const isDev = process.env.NODE_ENV !== 'production';
-
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (isDev) {
-    req.user = { devMode: true };
-    return next();
-  }
-
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new UNAUTHORIZED_ERROR(authErrorMessage.Unauthorized);
+    throw new UNAUTHORIZED_ERROR('Invalid or expired token');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -28,10 +19,10 @@ const auth = (req, res, next) => {
     next();
   } catch (err) {
     if (err instanceof jwt.JsonWebTokenError) {
-      return next(new UNAUTHORIZED_ERROR(authErrorMessage.Unauthorized));
+      return next(new UNAUTHORIZED_ERROR('Invalid token'));
     }
+    next(err);
   }
-  return next();
 };
 
 module.exports = auth;

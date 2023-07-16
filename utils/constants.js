@@ -20,10 +20,6 @@ const movieErrorMessage = {
   send: 'Фильм успешно удалён',
 };
 
-const authErrorMessage = {
-  Unauthorized: 'Invalid token',
-};
-
 const routerErrorMessage = {
   notFound: 'Такого адреса не существует.',
 };

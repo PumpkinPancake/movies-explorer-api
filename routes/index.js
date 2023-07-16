@@ -17,9 +17,6 @@ const auth = require('../middlewares/auth');
 
 router.post('/signin', loginValidator, login);
 router.post('/signup', createUserValidator, createUser);
-router.get('/signout', (req, res) => {
-  res.clearCookie('jwt').send({ message: 'Выход' });
-});
 
 router.use('/users', auth, usersRouter);
 router.use('/movies', auth, moviesRouter);
