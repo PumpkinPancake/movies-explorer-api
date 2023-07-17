@@ -18,9 +18,9 @@ const auth = require('../middlewares/auth');
 router.post('/signin', loginValidator, login);
 router.post('/signup', createUserValidator, createUser);
 
-router.use('/users', usersRouter);
-router.use('/movies', moviesRouter);
-router.use('/*', (req, res, next) => {
+router.use('/users', auth, usersRouter);
+router.use('/movies', auth, moviesRouter);
+router.use('/*', auth, (req, res, next) => {
   next(new NOT_FOUND_ERROR(routerErrorMessage.notFound));
 });
 

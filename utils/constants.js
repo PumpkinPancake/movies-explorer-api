@@ -32,7 +32,6 @@ module.exports = {
   limiter,
   userErrorMessage,
   movieErrorMessage,
-  authErrorMessage,
   routerErrorMessage,
   userSchemaErrorMessage,
 };

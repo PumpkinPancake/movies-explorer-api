@@ -23,6 +23,7 @@ const auth = (req, res, next) => {
     }
     next(err);
   }
+  return next();
 };
 
 module.exports = auth;
