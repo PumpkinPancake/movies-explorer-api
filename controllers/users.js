@@ -4,14 +4,12 @@ const jwt = require('jsonwebtoken');
 const BAD_REQUEST_ERROR = require('../errors/badRequestError');
 const WRONG_CONFLICT_ENTITY = require('../errors/wrongConflictEntity');
 const NOT_FOUND_ERROR = require('../errors/notFoundError');
-const UNAUTHORIZED_ERROR = require('../errors/unauthorizedError');
 
 const { userErrorMessage } = require('../utils/constants');
 
 const User = require('../models/user');
 
 const { JWT_SECRET, NODE_ENV } = require('../config');
-const { match } = require('assert');
 
 const SALT_ROUNDS = 10;
 
@@ -21,11 +19,11 @@ const getUser = (req, res, next) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new NOT_FOUND_ERROR(userErrorMessage.notFound));
+        return next(new BAD_REQUEST_ERROR(userErrorMessage.badRequest));
       }
 
       if (err.name === 'DocumentNotFoundError') {
-        return next(new BAD_REQUEST_ERROR(userErrorMessage.badRequest));
+        return next(new NOT_FOUND_ERROR(userErrorMessage.notFound));
       }
 
       return next(res);
@@ -56,9 +54,11 @@ const createUser = (req, res, next) => {
     .hash(password, SALT_ROUNDS)
     .then((hash) => {
       User
-        .create({ email, password: hash, name })
-        .then(() => {
-          res.status(201).json({ name, email });
+        .create({ email, name, password: hash })
+        .then((user) => {
+          const userObj = user.toObject();
+          delete userObj.password;
+          res.status(201).send(userObj);
         })
         .catch((err) => {
           if (err.code === 11000) {
@@ -90,6 +90,9 @@ const updateUser = (req, res, next) => {
       res.send(user);
     })
     .catch((err) => {
+      if (err.code === 11000) {
+        return next(new WRONG_CONFLICT_ENTITY(userErrorMessage.wrongConflict));
+      }
       if (err.name === 'ValidationError') {
         return next(new BAD_REQUEST_ERROR(userErrorMessage.badRequest));
       }

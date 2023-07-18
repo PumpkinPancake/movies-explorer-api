@@ -28,10 +28,15 @@ const userSchemaErrorMessage = {
   Unauthorized: 'Неверные email или пароль.',
 };
 
+const authErrorMessage = {
+  unauthorized: 'Invalid on expected token',
+};
+
 module.exports = {
   limiter,
   userErrorMessage,
   movieErrorMessage,
   routerErrorMessage,
   userSchemaErrorMessage,
+  authErrorMessage,
 };
