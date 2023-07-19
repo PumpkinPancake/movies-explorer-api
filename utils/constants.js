@@ -7,6 +7,8 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+const SALT_ROUNDS = 10;
+
 const userErrorMessage = {
   notFound: 'Пользователь не найден',
   wrongConflict: 'Пользователь с таким email адресом уже существует',
@@ -39,4 +41,5 @@ module.exports = {
   routerErrorMessage,
   userSchemaErrorMessage,
   authErrorMessage,
+  SALT_ROUNDS,
 };

@@ -11,7 +11,7 @@ const User = require('../models/user');
 
 const { JWT_SECRET, NODE_ENV } = require('../config');
 
-const SALT_ROUNDS = 10;
+const { SALT_ROUNDS } = require('../utils/constants');
 
 const getUser = (req, res, next) => {
   User

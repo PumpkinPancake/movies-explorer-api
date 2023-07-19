@@ -64,7 +64,7 @@ function deleteMovie(req, res, next) {
         return next(new ACCESS_DENIED_ERROR(movieErrorMessage.accessDenied));
       }
       return movie.deleteOne().then(() => {
-        res.status(200).send({ message: 'Фильм успешно удалён.' });
+        res.status(200).send(movieErrorMessage.send);
       });
     })
     .catch(next);

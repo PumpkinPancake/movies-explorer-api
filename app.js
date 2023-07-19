@@ -12,7 +12,7 @@ const router = require('./routes/index');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { errorHandler } = require('./middlewares/errorHandler');
+const errorHandler = require('./middlewares/errorHandler');
 
 const { limiter } = require('./utils/constants');
 

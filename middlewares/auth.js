@@ -7,9 +7,11 @@ const { authErrorMessage } = require('../utils/constants');
 
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
-  const token = authorization.replace('Bearer ', '');
   let payload;
-  if (!authorization || !authorization.startsWith('Bearer ')) return next(new UNAUTHORIZED_ERROR(authErrorMessage.unauthorized));
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return next(new UNAUTHORIZED_ERROR(authErrorMessage.unauthorized));
+  }
+  const token = authorization.replace('Bearer ', '');
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
