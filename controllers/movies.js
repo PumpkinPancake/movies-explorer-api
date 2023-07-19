@@ -60,7 +60,7 @@ function deleteMovie(req, res, next) {
   Movies.findById(_id)
     .orFail(new NOT_FOUND_ERROR(movieErrorMessage.notFound))
     .then((movie) => {
-      if (movie.owner.equals(req.user._id)) {
+      if (movie.owner.toString() !== req.user._id) {
         return next(new ACCESS_DENIED_ERROR(movieErrorMessage.accessDenied));
       }
       return movie.deleteOne().then(() => {

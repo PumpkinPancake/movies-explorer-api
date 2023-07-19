@@ -27,7 +27,7 @@ const getUser = (req, res, next) => {
         return next(new NOT_FOUND_ERROR(userErrorMessage.notFound));
       }
 
-      return next(res);
+      return next(err);
     });
 };
 
