@@ -31,6 +31,10 @@ const authErrorMessage = {
   unauthorized: 'Invalid on expected token',
 };
 
+const errorHandlerMessage = {
+  erServer: 'Error on the server',
+};
+
 module.exports = {
   limiter,
   userErrorMessage,
@@ -38,4 +42,5 @@ module.exports = {
   routerErrorMessage,
   authErrorMessage,
   SALT_ROUNDS,
+  errorHandlerMessage,
 };
