@@ -13,6 +13,7 @@ const userErrorMessage = {
   notFound: 'Пользователь не найден',
   wrongConflict: 'Пользователь с таким email адресом уже существует',
   badRequest: 'Неверные данные',
+  Unauthorized: 'Неверные email или пароль.',
 };
 
 const movieErrorMessage = {
@@ -26,10 +27,6 @@ const routerErrorMessage = {
   notFound: 'Такого адреса не существует.',
 };
 
-const userSchemaErrorMessage = {
-  Unauthorized: 'Неверные email или пароль.',
-};
-
 const authErrorMessage = {
   unauthorized: 'Invalid on expected token',
 };
@@ -39,7 +36,6 @@ module.exports = {
   userErrorMessage,
   movieErrorMessage,
   routerErrorMessage,
-  userSchemaErrorMessage,
   authErrorMessage,
   SALT_ROUNDS,
 };

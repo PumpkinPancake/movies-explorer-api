@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const BAD_REQUEST_ERROR = require('../errors/badRequestError');
 const WRONG_CONFLICT_ENTITY = require('../errors/wrongConflictEntity');
 const NOT_FOUND_ERROR = require('../errors/notFoundError');
+const UNAUTHORIZED_ERROR = require('../errors/unauthorizedError');
 
 const { userErrorMessage } = require('../utils/constants');
 
@@ -33,16 +34,33 @@ const getUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  User
-    .findUserByCredentials(email, password)
+  User.findOne({ email })
+    .select('+password')
+    .then((user) => {
+      if (!user) {
+        return next(new UNAUTHORIZED_ERROR(userErrorMessage.Unauthorized));
+      }
 
-    .then(({ _id }) => {
-      const token = jwt.sign(
-        { _id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
-      );
-      return res.send({ token });
+      return user.comparePassword(password)
+        .then((matched) => {
+          if (!matched) {
+            return next(new UNAUTHORIZED_ERROR(userErrorMessage.Unauthorized));
+          }
+
+          const token = jwt.sign(
+            { _id: user._id },
+            NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+            { expiresIn: '7d' },
+          );
+          res.send({ token });
+          return res
+            .status(200)
+            .send({
+              _id: user._id,
+              name: user.name,
+              email: user.email,
+            });
+        });
     })
     .catch(next);
 };

@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcryptjs = require('bcryptjs');
 
-const UNAUTHORIZED_ERROR = require('../errors/unauthorizedError');
-
-const { userSchemaErrorMessage } = require('../utils/constants');
-
 const userShema = new mongoose.Schema({
   email: {
     type: String,
@@ -19,6 +15,7 @@ const userShema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    select: false,
   },
   name: {
     type: String,
@@ -28,24 +25,8 @@ const userShema = new mongoose.Schema({
   },
 });
 
-userShema.statics.findUserByCredentials = function searchUser(email, password) {
-  return this.findOne({ email })
-    .select('+password')
-    .then((user) => {
-      if (!user) {
-        return Promise.reject(
-          new UNAUTHORIZED_ERROR(userSchemaErrorMessage.Unauthorized),
-        );
-      }
-      return bcryptjs.compare(password, user.password).then((matched) => {
-        if (!matched) {
-          return Promise.reject(
-            new UNAUTHORIZED_ERROR(userSchemaErrorMessage.Unauthorized),
-          );
-        }
-        return user;
-      });
-    });
+userShema.methods.comparePassword = function comparePassword(password) {
+  return bcryptjs.compare(password, this.password);
 };
 
 module.exports = mongoose.model('user', userShema);
