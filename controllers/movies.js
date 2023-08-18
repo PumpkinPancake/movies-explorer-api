@@ -31,6 +31,20 @@ function createMovie(req, res, next) {
     nameEN,
   } = req.body;
 
+  console.log('Received movie data:', {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+  });
+
   Movies.create({
     country,
     director,
