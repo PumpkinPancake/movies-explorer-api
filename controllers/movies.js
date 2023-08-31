@@ -31,20 +31,6 @@ function createMovie(req, res, next) {
     nameEN,
   } = req.body;
 
-  console.log('Received movie data:', {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
-  });
-
   Movies.create({
     country,
     director,
@@ -78,7 +64,7 @@ function deleteMovie(req, res, next) {
         return next(new ACCESS_DENIED_ERROR(movieErrorMessage.accessDenied));
       }
       return movie.deleteOne().then(() => {
-        res.status(200).send(movieErrorMessage.send);
+        res.status(200).send({ message: movieErrorMessage.send });
       });
     })
     .catch(next);
